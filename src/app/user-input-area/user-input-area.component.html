@@ -1,0 +1,8 @@
+<form [formGroup]="userInputForm" (ngSubmit)="onSubmit()">
+  <input formControlName="fn" />
+  <input formControlName="ln" />
+  <input formControlName="cn" type="number" />
+  <input formControlName="ad" />
+  <button type="submit" [disabled]="!userInputForm.valid">Submit</button>
+</form>
+{{ userData | json }}
