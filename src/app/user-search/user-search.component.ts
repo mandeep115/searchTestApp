@@ -14,7 +14,6 @@ import { dataType, UserInfoService } from '../user-info.service';
   styleUrls: ['./user-search.component.scss'],
 })
 export class UserSearchComponent implements OnInit {
-  userData!: dataType;
   subscription!: Subscription;
   userSearchForm = new FormGroup({
     searchStr: new FormControl(''),
@@ -22,60 +21,57 @@ export class UserSearchComponent implements OnInit {
 
   constructor(private data: UserInfoService) {}
 
-  help(
-    dt: 'fn' | 'ln' | 'cn' | 'ad',
-    s: string,
-    so: { fn: number; ln: number; cn: number; ad: number }
-  ) {
-    console.log(s[s.length - 1]);
-    if (['\\', '@', '#', '$'].includes(s[s.length - 1])) {
-      return;
-    }
-    if (so[dt] !== -1) {
-      let ni = s.slice(so[dt] + 1, s.length).match(/[\\@#$]/)?.index;
-      if (!ni) {
-        ni = s.length;
-        this.userData[dt] = s.slice(so[dt] + 1, ni);
-      } else {
-        this.userData[dt] = s.slice(so[dt] + 1, ni + so[dt] + 1);
-      }
-    } else {
-      this.userData[dt] = '';
-    }
-    this.data.changeData(this.userData);
-  }
+  // help(
+  //   dt: 'fn' | 'ln' | 'cn' | 'ad',
+  //   s: string,
+  //   so: { fn: number; ln: number; cn: number; ad: number }
+  // ) {
+  //   console.log(s[s.length - 1]);
+  //   if (['\\', '@', '#', '$'].includes(s[s.length - 1])) {
+  //     return;
+  //   }
+  //   if (so[dt] !== -1) {
+  //     let ni = s.slice(so[dt] + 1, s.length).match(/[\\@#$]/)?.index;
+  //     if (!ni) {
+  //       ni = s.length;
+  //       this.userData[dt] = s.slice(so[dt] + 1, ni);
+  //     } else {
+  //       this.userData[dt] = s.slice(so[dt] + 1, ni + so[dt] + 1);
+  //     }
+  //   } else {
+  //     this.userData[dt] = '';
+  //   }
+  //   this.data.changeData(this.userData);
+  // }
   onInput() {
-    let temp: string = this.userSearchForm.value.searchStr;
-    let so = {
-      fn: temp.indexOf('\\'),
-      ln: temp.indexOf('@'),
-      cn: temp.indexOf('#'),
-      ad: temp.indexOf('$'),
-    };
-    console.log(so);
-    this.help('fn', temp, so);
-    this.help('ln', temp, so);
-    this.help('cn', temp, so);
-    this.help('ad', temp, so);
-    // console.log(this.userSearchForm.value);
+    this.data.changeData(this.userSearchForm.value.searchStr);
   }
+  // onInput() {
+  //   let temp: string = this.userSearchForm.value.searchStr;
+  //   let so = {
+  //     fn: temp.indexOf('\\'),
+  //     ln: temp.indexOf('@'),
+  //     cn: temp.indexOf('#'),
+  //     ad: temp.indexOf('$'),
+  //   };
+  //   console.log(so);
+  //   this.help('fn', temp, so);
+  //   this.help('ln', temp, so);
+  //   this.help('cn', temp, so);
+  //   this.help('ad', temp, so);
+  //   // console.log(this.userSearchForm.value);
+  // }
   ngOnInit() {
     this.subscription = this.data.currentData.subscribe((d) => {
       console.log(d);
-      this.userData = d;
+      // this.userData = d;
       this.userSearchForm.controls['searchStr'].setValue(
-        this.formatSearchStr(d)
+        d
+        // this.formatSearchStr(d)
       );
     });
   }
-  formatSearchStr(d: dataType): string {
-    let str = '';
-    d.fn && (str += `\\${d.fn}`);
-    d.ln && (str += `@${d.ln}`);
-    d.cn && (str += `#${d.cn}`);
-    d.ad && (str += `$${d.ad}`);
-    return str;
-  }
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }

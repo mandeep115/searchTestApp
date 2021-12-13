@@ -7,17 +7,12 @@ export type dataType = { fn: string; ln: string; cn: string; ad: string };
   providedIn: 'root',
 })
 export class UserInfoService {
-  private dataSource = new BehaviorSubject({
-    fn: '',
-    ln: '',
-    cn: '',
-    ad: '',
-  });
+  private dataSource = new BehaviorSubject('');
   currentData = this.dataSource.asObservable();
 
   constructor() {}
 
-  changeData(data: dataType) {
+  changeData(data: string) {
     this.dataSource.next(data);
   }
 }
